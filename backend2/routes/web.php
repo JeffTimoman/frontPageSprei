@@ -1,0 +1,101 @@
+<?php
+
+use App\Http\Middleware\isAdmin;
+use App\Http\Middleware\isLogin;
+use App\Http\Middleware\isNotLogin;
+use App\Models\ProductDepartement;
+use App\Models\Transaction;
+use App\Models\WebVariable;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', function () {
+    $departement = auth()->user()->departement;
+    $productDepartements = ProductDepartement::where('departement_id', $departement->id)->get();
+
+    return view('index', ['productDepartements' => $productDepartements, 'departement' => $departement]);
+})->name('user.index')->middleware(isLogin::class);
+
+Route::get('/login', function () {
+    return view('login');
+})->name('user.login')->middleware(isNotLogin::class);
+
+Route::post('/login', function (Request $request) {
+    $credentials = $request->only('email', 'password');
+    $allow_login = WebVariable::where('name', 'AllowLogin')->first();
+    if (auth()->attempt($credentials) ) {
+        $request->session()->regenerate();
+        if (auth()->user()->role != 'admin' && $allow_login->value == '0') {
+            auth()->logout();
+            return back()->with('error', 'The application is closed for now.');
+        }
+        return redirect()->route('user.index')->with('success', 'Login success');
+    }
+
+    return back()->with('error', 'Login failed');
+})->name('user.login')->middleware(isNotLogin::class);
+
+Route::get('/logout', function () {
+    auth()->logout();
+
+    request()->session()->invalidate();
+
+    request()->session()->regenerateToken();
+
+    return redirect()->route('user.login')->with('success', 'Logout success');
+})->name('user.logout')->middleware(isLogin::class);
+
+Route::post('/claim', function(Request $request) {
+    $productDepartement = ProductDepartement::findOrFail($request->id);
+
+    $block_claim_time = WebVariable::where('name', 'BlockClaimTime')->first();
+    $current_time = Carbon::now();
+
+    if (Carbon::parse($block_claim_time->value)->lessThan($current_time)) {
+        return redirect()->route('user.index')->with('error', 'Claim failed due to time running out.');
+    }
+
+    if(auth()->user()->buying_limit <= 0) {
+        return redirect()->route('user.index')->with('error', 'Claim failed because you have claimed two products.');
+    }
+
+    $departement = auth()->user()->departement;
+    if ($productDepartement->departement_id != $departement->id) {
+        return redirect()->route('user.index')->with('error', 'Claim failed');
+    }
+
+    $transactions = Transaction::where('product_departement_id', $productDepartement->id)->get();
+    if ($productDepartement->quantity <= $transactions->count()) {
+        return redirect()->route('user.index')->with('error', 'Claim failed because the product is out of stock');
+    }
+
+    $check = Transaction::where('product_departement_id', $productDepartement->id)->where('user_id', auth()->id())->first();
+    if ($check) {
+        return redirect()->route('user.index')->with('error', 'Claim failed because you have claimed this product.');
+    }
+
+
+    Transaction::create([
+        'product_departement_id' => $productDepartement->id,
+        'user_id' => auth()->id()
+    ]);
+
+    auth()->user()->buying_limit -= 1;
+    auth()->user()->save();
+
+    return redirect()->route('user.index')->with('success', 'Claim success');
+})->name('user.claim')->middleware(isLogin::class);
+
+Route::get('/admin/env', function(){
+    return view('admin.edit_env_variables');
+})->name('admin.edit_env_variables')->middleware([isLogin::class, isAdmin::class]);
+
+Route::post('/admin/env', function(Request $request){
+    $WebVariables = WebVariable::all();
+    foreach($WebVariables as $WebVariable){
+        $WebVariable->value = $request[$WebVariable->name];
+        $WebVariable->save();
+    }
+    return redirect()->back();
+});
