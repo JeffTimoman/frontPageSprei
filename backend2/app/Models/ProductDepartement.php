@@ -16,4 +16,7 @@ class ProductDepartement extends Model
     public function transactions(){
         return $this->hasMany(Transaction::class);
     }
+    public function departement(){
+        return $this->belongsTo(Departement::class);
+    }
 }

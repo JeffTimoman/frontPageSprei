@@ -58,7 +58,7 @@
     </div>
 
     <div class="col-md-12">
-        <div class="container" style="height: 60vh; overflow-y:scroll;">
+        <div class="container" style="height: 55vh; overflow-y:scroll; position: relative;">
             @foreach ($productDepartements as $item)
                 <form action="{{ route('user.claim') }}" method="POST" id="claimNo{{$item->id}}">
                     @csrf
@@ -67,7 +67,7 @@
                             class="card-img-top" style="max-width: 200px; background" alt="...">
                         <div class="card-body">
                             <h5 class="card-title">Color : {{ $item->product->name }}</h5>
-                            <p class="card-text">Stock : {{ $item->quantity }} | Claims : {{ $item->transactions->count() }}
+                            <p class="card-text">Stock : {{ $item->quantity }} | Claims : {{ $item->transactions->count() }} | <a href="{{route('product_departement.detail', ['id'=> $item->id])}}">Detail</a>
                             </p>
                             <input type="hidden" value="{{ $item->id }}" name="id">
                             @php
@@ -86,7 +86,7 @@
                     </div>
                 </form>
             @endforeach
-            <div class="mb-5"></div>
+            <div class="mb-4"></div>
         </div>
     </div>
 

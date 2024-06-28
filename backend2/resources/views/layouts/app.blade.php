@@ -22,12 +22,12 @@
 </head>
 
 <body>
-    <div class="container-sm p-0 m-0" style="max-width: 100vw; background: #fbfbfe; height: 100vh; overflow-y: scroll; overflow-x: hidden;">
+    <div class="container-sm p-0 m-0" style="max-width: 100vw; background: #fbfbfe; height: 100vh; overflow-y: hidden; overflow-x: hidden;">
         <div class="row">
             @yield('content')
         </div>
-        @include('components.navbar')
     </div>
+    @include('components.navbar')
     {{-- jquery latest --}}
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

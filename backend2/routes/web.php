@@ -87,6 +87,17 @@ Route::post('/claim', function(Request $request) {
     return redirect(route('user.index').'/#claimNo'.$request->id)->with('success', 'Claim success');
 })->name('user.claim')->middleware(isLogin::class);
 
+Route::get('/{id}/detail', function($id){
+    $productDepartement = ProductDepartement::findOrFail($id);
+    $transactions = Transaction::where('product_departement_id', $productDepartement->id)->get();
+    return view('product_departement.detail', ['productDepartement' => $productDepartement, 'transactions' => $transactions]);
+})->name('product_departement.detail')->middleware(isLogin::class);
+
+Route::get('/class', function(){
+    $departement = auth()->user()->departement;
+    return view('user.departement', ['departement' => $departement]);
+})->name('departement.detail')->middleware(isLogin::class);
+
 Route::get('/admin/env', function(){
     return view('admin.edit_env_variables');
 })->name('admin.edit_env_variables')->middleware([isLogin::class, isAdmin::class]);
@@ -99,3 +110,13 @@ Route::post('/admin/env', function(Request $request){
     }
     return redirect()->back();
 });
+
+
+
+Route::get('/search', function(){
+    return redirect()->back()->with('error', 'Search feature is not available yet.');
+})->name('user.search')->middleware(isLogin::class);
+
+Route::get('/info', function(){
+    return redirect()->back()->with('error', 'Info feature is not available yet.');
+})->name('user.info')->middleware(isLogin::class);
