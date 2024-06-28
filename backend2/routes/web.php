@@ -53,26 +53,26 @@ Route::post('/claim', function(Request $request) {
     $current_time = Carbon::now();
 
     if (Carbon::parse($block_claim_time->value)->lessThan($current_time)) {
-        return redirect()->route('user.index')->with('error', 'Claim failed due to time running out.');
+        return redirect(route('user.index').'/#claimNo'.$request->id)->with('error', 'Claim failed due to time running out.');
     }
 
     if(auth()->user()->buying_limit <= 0) {
-        return redirect()->route('user.index')->with('error', 'Claim failed because you have claimed two products.');
+        return redirect(route('user.index').'/#claimNo'.$request->id)->with('error', 'Claim failed because you have claimed two products.');
     }
 
     $departement = auth()->user()->departement;
     if ($productDepartement->departement_id != $departement->id) {
-        return redirect()->route('user.index')->with('error', 'Claim failed');
+        return redirect(route('user.index').'/#claimNo'.$request->id)->with('error', 'Claim failed');
     }
 
     $transactions = Transaction::where('product_departement_id', $productDepartement->id)->get();
     if ($productDepartement->quantity <= $transactions->count()) {
-        return redirect()->route('user.index')->with('error', 'Claim failed because the product is out of stock');
+        return redirect(route('user.index').'/#claimNo'.$request->id)->with('error', 'Claim failed because the product is out of stock');
     }
 
     $check = Transaction::where('product_departement_id', $productDepartement->id)->where('user_id', auth()->id())->first();
     if ($check) {
-        return redirect()->route('user.index')->with('error', 'Claim failed because you have claimed this product.');
+        return redirect(route('user.index').'/#claimNo'.$request->id)->with('error', 'Claim failed because you have claimed this product.');
     }
 
 
@@ -84,7 +84,7 @@ Route::post('/claim', function(Request $request) {
     auth()->user()->buying_limit -= 1;
     auth()->user()->save();
 
-    return redirect()->route('user.index')->with('success', 'Claim success');
+    return redirect(route('user.index').'/#claimNo'.$request->id)->with('success', 'Claim success');
 })->name('user.claim')->middleware(isLogin::class);
 
 Route::get('/admin/env', function(){

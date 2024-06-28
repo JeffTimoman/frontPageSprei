@@ -29,9 +29,10 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'Admin',
             'email'=> 'admin@admin.com',
-            'departement_id' => 1,
+            'departement_id' => 4,
             'password' => bcrypt('admin123'),
-            'role' => 'admin'
+            'role' => 'admin',
+            'buying_limit' => 1000000,
         ]);
     }
 }

@@ -60,7 +60,7 @@
     <div class="col-md-12">
         <div class="container" style="height: 60vh; overflow-y:scroll;">
             @foreach ($productDepartements as $item)
-                <form action="{{ route('user.claim') }}" method="POST">
+                <form action="{{ route('user.claim') }}" method="POST" id="claimNo{{$item->id}}">
                     @csrf
                     <div class="card mt-2" style="width: 100%;">
                         <img src="https://imgv3.fotor.com/images/side/3D-pink-hair-girl-image-with-generate-box.jpg"
@@ -86,6 +86,7 @@
                     </div>
                 </form>
             @endforeach
+            <div class="mb-5"></div>
         </div>
     </div>
 

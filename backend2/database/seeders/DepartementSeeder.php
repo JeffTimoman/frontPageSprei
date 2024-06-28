@@ -23,5 +23,8 @@ class DepartementSeeder extends Seeder
             'name' => 'PPTI 22'
         ]);
 
+        Departement::create([
+            'name' => 'ADMIN'
+        ]);
     }
 }

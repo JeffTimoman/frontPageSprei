@@ -150,5 +150,49 @@ class ProductDepartementSeeder extends Seeder
             'quantity' => 9
         ]);
 
+        $departement = Departement::where('name', 'ADMIN')->first();
+
+        //Khaki : Qty: 12
+        ProductDepartement::create([
+            'departement_id' => $departement->id,
+            'product_id' => Product::where('name', 'Khaki')->first()->id,
+            'quantity' => 12
+        ]);
+
+        //Petal : Qty: 7
+        ProductDepartement::create([
+            'departement_id' => $departement->id,
+            'product_id' => Product::where('name', 'Petal')->first()->id,
+            'quantity' => 7
+        ]);
+
+        //Blue Mint : Qty: 16
+        ProductDepartement::create([
+            'departement_id' => $departement->id,
+            'product_id' => Product::where('name', 'Blue Mint')->first()->id,
+            'quantity' => 16
+        ]);
+
+        //Pink : Qty: 10
+        ProductDepartement::create([
+            'departement_id' => $departement->id,
+            'product_id' => Product::where('name', 'Pink')->first()->id,
+            'quantity' => 10
+        ]);
+
+        //Biru Tua : Qty: 16
+        ProductDepartement::create([
+            'departement_id' => $departement->id,
+            'product_id' => Product::where('name', 'Biru Tua')->first()->id,
+            'quantity' => 16
+        ]);
+
+        //Cream : Qty: 8
+        ProductDepartement::create([
+            'departement_id' => $departement->id,
+            'product_id' => Product::where('name', 'Cream')->first()->id,
+            'quantity' => 9
+        ]);
+
     }
 }
