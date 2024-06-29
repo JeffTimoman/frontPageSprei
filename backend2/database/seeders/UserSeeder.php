@@ -34,5 +34,15 @@ class UserSeeder extends Seeder
             'role' => 'admin',
             'buying_limit' => 1000000,
         ]);
+
+        // create 10 user departement_id 4 (admin)
+        for($i = 0; $i < 3; $i++) {
+            User::create([
+                'name' => 'User Admin ' . $i,
+                'email'=> 'useradmin' . $i . '@gmail.com',
+                'departement_id' => 4,
+                'password' => bcrypt('admin123')
+            ]);
+        }
     }
 }

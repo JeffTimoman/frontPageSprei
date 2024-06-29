@@ -1,19 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.admin')
+@section('title', 'Departement List')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Admin</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-</head>
+@section('content')
+    <div class="row col-md-12 mt-3 d-flex align-items-center justify-content-center">
+        <div class="text-center col-md-12">
+            <h1>Index By User</h1>
+        </div>
 
-<body>
-    <div class="container-fluid row col-md-12" style="width: 100vw; height: 100vh;">
-        <div class="col-md-12" style="width: 100vw;">
-            <div class="col-md-12 d-flex align-items-center justify-content-center" style="width: 100vw;">
-                <form action="" method="POST">
+        <form action="" method="POST">
+            <div class="card m-0 p-0">
+                <div class="card-header col-md-12 row m-0 p-2">
+                    <div class="col-md-12 mt-1">
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%">Save</button>
+                    </div>
+                </div>
+                <div class="card-body" style="height: 60vh; overflow-y: scroll;">
                     @csrf
                     @php
                         $canLogin = \App\Models\WebVariable::where('name', 'AllowLogin')->first();
@@ -34,13 +36,14 @@
 
                     </div>
                     <div class="col-md-12 mt-3">
-                        <button type="submit" class="btn btn-primary" style="width: 100%">Save</button>
                     </div>
-                </form>
 
+                </div>
             </div>
-        </div>
+        </form>
     </div>
-</body>
+@endsection
 
-</html>
+@section('script')
+
+@endsection

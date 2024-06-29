@@ -22,8 +22,9 @@
 </head>
 
 <body>
-    <div class="container-sm p-0 m-0" style="max-width: 100vw; background: #fbfbfe; height: 100vh; overflow-y: hidden; overflow-x: hidden;">
-        <div class="row">
+    @yield('topbar')
+    <div class="container-sm p-0 m-0" style="max-width: 100vw; background: #fbfbfe; height: 80vh; overflow-y: scroll; overflow-x: hidden;">
+        <div class="row" style="overflow-y: hidden; height: 100%;">
             @yield('content')
         </div>
     </div>

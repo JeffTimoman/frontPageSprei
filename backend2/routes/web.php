@@ -5,6 +5,7 @@ use App\Http\Middleware\isLogin;
 use App\Http\Middleware\isNotLogin;
 use App\Models\ProductDepartement;
 use App\Models\Transaction;
+use App\Models\User;
 use App\Models\WebVariable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -13,6 +14,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     $departement = auth()->user()->departement;
     $productDepartements = ProductDepartement::where('departement_id', $departement->id)->get();
+
+    // $transactions = Transaction::whereHas('user', function($query) use ($departement){
+    //     $query->where('departement_id', $departement->id);
+    // })->get();
+    // $quantity_of_all_product = ProductDepartement::where('departement_id', $departement->id)->sum('quantity');
 
     return view('index', ['productDepartements' => $productDepartements, 'departement' => $departement]);
 })->name('user.index')->middleware(isLogin::class);
@@ -70,8 +76,16 @@ Route::post('/claim', function(Request $request) {
         return redirect(route('user.index').'/#claimNo'.$request->id)->with('error', 'Claim failed because the product is out of stock');
     }
 
+    //transactions of all user in this departement
+    $transactions = Transaction::whereHas('user', function($query) use ($departement){
+        $query->where('departement_id', $departement->id);
+    })->get();
+    $quantity_of_all_product = ProductDepartement::where('departement_id', $departement->id)->sum('quantity');
+    $check2 = $quantity_of_all_product - $transactions->count();
+
     $check = Transaction::where('product_departement_id', $productDepartement->id)->where('user_id', auth()->id())->first();
-    if ($check) {
+
+    if ($check && $check2 != 1){
         return redirect(route('user.index').'/#claimNo'.$request->id)->with('error', 'Claim failed because you have claimed this product.');
     }
 
@@ -98,18 +112,6 @@ Route::get('/class', function(){
     return view('user.departement', ['departement' => $departement]);
 })->name('departement.detail')->middleware(isLogin::class);
 
-Route::get('/admin/env', function(){
-    return view('admin.edit_env_variables');
-})->name('admin.edit_env_variables')->middleware([isLogin::class, isAdmin::class]);
-
-Route::post('/admin/env', function(Request $request){
-    $WebVariables = WebVariable::all();
-    foreach($WebVariables as $WebVariable){
-        $WebVariable->value = $request[$WebVariable->name];
-        $WebVariable->save();
-    }
-    return redirect()->back();
-});
 
 
 
@@ -117,6 +119,35 @@ Route::get('/search', function(){
     return redirect()->back()->with('error', 'Search feature is not available yet.');
 })->name('user.search')->middleware(isLogin::class);
 
-Route::get('/info', function(){
-    return redirect()->back()->with('error', 'Info feature is not available yet.');
+Route::get('/claimed', function(){
+    $transactions = Transaction::where('user_id', auth()->id())->get();
+    return view('user.claimed', ['transactions' => $transactions]);
 })->name('user.info')->middleware(isLogin::class);
+
+Route::prefix('admin')->group(function() {
+    Route::get('/', function(Request $request){
+        $users = User::all();
+        if ($request->has('departement') && $request->departement != '') {
+            $users = User::where('departement_id', $request->departement)->get();
+        }
+        // sort by departement name then by user name
+        $users = $users->sortBy(function($user){
+            return $user->departement->name . $user->name;
+        });
+        return view('admin.index', ['users' => $users]);
+    })->name('admin.index')->middleware([isLogin::class, isAdmin::class]);
+
+    Route::get('/env', function(){
+        return view('admin.edit_env_variables');
+    })->name('admin.edit_env_variables')->middleware([isLogin::class, isAdmin::class])->name('admin.edit_env_variables');
+
+    Route::post('/env', function(Request $request){
+        $WebVariables = WebVariable::all();
+        foreach($WebVariables as $WebVariable){
+            $WebVariable->value = $request[$WebVariable->name];
+            $WebVariable->save();
+        }
+        return redirect()->back();
+    })->middleware([isLogin::class, isAdmin::class]);
+});
+

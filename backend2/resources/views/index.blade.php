@@ -23,8 +23,9 @@
     </style>
 @endsection
 
-@section('content')
-    <div class="topbar d-flex justify-content-around align-items-center col-md-12" style="background: #2f27ce;">
+@section('topbar')
+    <div class="topbar d-flex justify-content-around align-items-center col-md-12"
+        style="background: #2f27ce; position: sticky; top: 0;">
         <a href="#" class="text-white text-center p-3 col-md-1">
             {{-- <i class="fa-solid fa-house"></i> --}}
         </a>
@@ -33,16 +34,22 @@
             {{-- <i class="fas fa-search"></i> --}}
         </a>
     </div>
+@endsection
 
-    <div class="col-md-12 mt-3" style="">
-        <div class="container">
-            <div class="card p-2" style="background: #433bff;">
-                <h2 class="text-center" style="color: white; ">Time Left</h2>
-                <div class="card-body">
-                    @php
-                        $time = \App\Models\WebVariable::where('name', 'BlockClaimTime')->first();
-                    @endphp
-                    <h1 class="text-center" id="time" style="font-size: 50px; color: #dedcff;" data-end-time="{{$time->value}}"></h1>
+@section('content')
+
+    <div class="col-md-12 mt-3">
+        <div class="container row-md-12 d-flex align-items-center justify-content-center">
+            <div class="col-md-12">
+                <div class="card p-2" style="background: #433bff;">
+                    <h2 class="text-center" style="color: white; ">Time Left</h2>
+                    <div class="card-body">
+                        @php
+                            $time = \App\Models\WebVariable::where('name', 'BlockClaimTime')->first();
+                        @endphp
+                        <h1 class="text-center" id="time" style="font-size: 2rem; color: #dedcff;"
+                            data-end-time="{{ $time->value }}"></h1>
+                    </div>
                 </div>
             </div>
         </div>
@@ -52,72 +59,173 @@
 
     <div class="col-md-12 mt-1">
         <div class="container">
-            <h3 class="p-2" style="border-bottom: solid #433bff 1px;">Sprei | <small>{{ $departement->name }}</small> | <small>Claim Limit : {{ auth()->user()->buying_limit }}</small>
+            <h3 class="p-2" style="border-bottom: solid #433bff 1px;">Hi, {{ explode(' ', auth()->user()->name)[0] }} ! |
+                <small>Claim Limit : {{ auth()->user()->buying_limit }}</small>
             </h3>
         </div>
     </div>
 
-    <div class="col-md-12">
-        <div class="container" style="height: 55vh; overflow-y:scroll; position: relative;">
-            @foreach ($productDepartements as $item)
-                <form action="{{ route('user.claim') }}" method="POST" id="claimNo{{$item->id}}">
-                    @csrf
-                    <div class="card mt-2" style="width: 100%;">
-                        <img src="https://imgv3.fotor.com/images/side/3D-pink-hair-girl-image-with-generate-box.jpg"
-                            class="card-img-top" style="max-width: 200px; background" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">Color : {{ $item->product->name }}</h5>
-                            <p class="card-text">Stock : {{ $item->quantity }} | Claims : {{ $item->transactions->count() }} | <a href="{{route('product_departement.detail', ['id'=> $item->id])}}">Detail</a>
-                            </p>
-                            <input type="hidden" value="{{ $item->id }}" name="id">
-                            @php
-                                $check = $item->transactions->where('user_id', Auth::user()->id)->count();
-                            @endphp
-                            @if ($check > 0)
-                                <button type="button" class="btn btn-primary btn-claim" disabled>Claimed</button>
-                            @else
-                                @if ($item->quantity <= $item->transactions->count())
-                                    <button type="button" class="btn btn-primary btn-claim" disabled>Out of Stock</button>
+    <div class="col-md-12" style="height: 75%; overflow-y:scroll; position: relative;">
+        <div class="container mb-5">
+            @php
+                $transactions = \App\Models\Transaction::whereHas('user', function ($query) use ($departement) {
+                    $query->where('departement_id', $departement->id);
+                })->get();
+                $quantity_of_all_product = \App\Models\ProductDepartement::where(
+                    'departement_id',
+                    $departement->id,
+                )->sum('quantity');
+                $check2 = $quantity_of_all_product - $transactions->count();
+                // dump($check2);
+            @endphp
+            @if ($check2 == 1)
+                @foreach ($productDepartements as $item)
+                    <form action="{{ route('user.claim') }}" method="POST" id="claimNo{{ $item->id }}">
+                        @csrf
+                        <div class="card mt-2" style="width: 100%;">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <img src="{{ asset('images/' . $item->product->image) }}" class="card-img-top"
+                                    style="max-width: 200px; background" alt="...">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Color : {{ $item->product->name }}</h5>
+                                <p class="card-text">Stock : {{ $item->quantity }} | Claims :
+                                    {{ $item->transactions->count() }}
+                                    | <a href="{{ route('product_departement.detail', ['id' => $item->id]) }}">Detail</a>
+                                </p>
+                                <input type="hidden" value="{{ $item->id }}" name="id">
 
+                                @if ($item->quantity <= $item->transactions->count())
+                                    <button type="button" class="btn btn-secondary btn-claim" disabled>Out of
+                                        Stock</button>
+                                @else
+                                    <button type="submit" class="btn btn-primary btn-claim" data-bs-toggle="modal"
+                                        data-bs-target="#confirmClaim">Claim Again</button>
                                 @endif
-                                <button type="submit" class="btn btn-primary btn-claim">Claim</button>
-                            @endif
+                            </div>
                         </div>
-                    </div>
-                </form>
-            @endforeach
-            <div class="mb-4"></div>
+                    </form>
+                @endforeach
+            @else
+                @foreach ($productDepartements as $item)
+                    <form action="{{ route('user.claim') }}" method="POST" id="claimNo{{ $item->id }}">
+                        @csrf
+                        <div class="card mt-2 " style="width: 100%;">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <img src="{{ asset('images/' . $item->product->image) }}" class="card-img-top"
+                                    style="max-width: 200px; background" alt="...">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Color : {{ $item->product->name }}</h5>
+                                <p class="card-text">Stock : {{ $item->quantity }} | Claims :
+                                    {{ $item->transactions->count() }}
+                                    | <a href="{{ route('product_departement.detail', ['id' => $item->id]) }}">Detail</a>
+                                </p>
+                                <input type="hidden" value="{{ $item->id }}" name="id">
+                                @php
+                                    $check = $item->transactions->where('user_id', Auth::user()->id)->count();
+
+                                @endphp
+
+
+                                @if ($check > 0)
+                                    <button type="button" class="btn btn-primary btn-claim" disabled>Claimed</button>
+                                @else
+                                    @if ($item->quantity <= $item->transactions->count())
+                                        <button type="button" class="btn btn-secondary btn-claim" disabled>Out of
+                                            Stock</button>
+                                    @else
+                                        <button type="button" class="btn btn-primary btn-claim" data-bs-toggle="modal"
+                                            data-bs-target="#confirmClaim">Claim</button>
+                                    @endif
+                                @endif
+                            </div>
+                        </div>
+                    </form>
+                @endforeach
+            @endif
         </div>
     </div>
 
-    <div class="col-md-12 mb-5">
+    <!-- Button trigger modal -->
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="confirmClaim" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="confirmClaimLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="confirmClaimLabel">Are you sure to claim this?</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card mt-2 " style="width: 100%;">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <img src="" class="card-img-top" style="max-width: 200px; background" alt="...">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title"></h5>
+                            <p class="card-text">
+                            </p>
+                        </div>
+                    </div>
+                    <div class="alert alert-warning mt-3" role="alert">
+                        Apabila anda menekan claim, maka anda <strong class="text-danger">TIDAK DAPAT MENGGANTI</strong> atau <strong class="text-danger">MEMBATALKANNYA</strong>.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <form action="{{ route('user.claim') }}" method="POST">
+                        <input type="hidden" name="id" value="" id="finalId">
+                        @csrf
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" id="finalConfirm">Claim</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
 @endsection
 
 @section('script')
-<script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-        const endTimeString = document.getElementById('time').getAttribute('data-end-time');
-        const endTime = new Date(endTimeString).getTime();
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const endTimeString = document.getElementById('time').getAttribute('data-end-time');
+            const endTime = new Date(endTimeString).getTime();
 
-        const timerInterval = setInterval(() => {
-            const now = new Date().getTime();
-            const distance = endTime - now;
+            const timerInterval = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = endTime - now;
 
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            document.getElementById('time').innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+                document.getElementById('time').innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
 
-            if (distance < 0) {
-                clearInterval(timerInterval);
-                document.getElementById('time').innerHTML = "EXPIRED";
-            }
-        }, 1000);
-    });
-</script>
+                if (distance < 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('time').innerHTML = "EXPIRED";
+                }
+            }, 1000);
+        });
+
+        $('document').ready(function() {
+            $('.btn-claim').click(function() {
+                const form = $(this).closest('form');
+                const img = form.find('img').attr('src');
+                const title = form.find('.card-title').text();
+                const text = form.find('.card-text').text();
+
+                $('#confirmClaim').find('img').attr('src', img);
+                $('#confirmClaim').find('.card-title').text(title);
+                $('#confirmClaim').find('.card-text').text(text);
+                $('#finalId').val(form.find('input[name="id"]').val());
+            });
+        });
+    </script>
+
 
 @endsection

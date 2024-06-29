@@ -156,43 +156,43 @@ class ProductDepartementSeeder extends Seeder
         ProductDepartement::create([
             'departement_id' => $departement->id,
             'product_id' => Product::where('name', 'Khaki')->first()->id,
-            'quantity' => 12
+            'quantity' => 2
         ]);
 
         //Petal : Qty: 7
         ProductDepartement::create([
             'departement_id' => $departement->id,
             'product_id' => Product::where('name', 'Petal')->first()->id,
-            'quantity' => 7
+            'quantity' => 2
         ]);
 
         //Blue Mint : Qty: 16
         ProductDepartement::create([
             'departement_id' => $departement->id,
             'product_id' => Product::where('name', 'Blue Mint')->first()->id,
-            'quantity' => 16
+            'quantity' => 2
         ]);
 
         //Pink : Qty: 10
-        ProductDepartement::create([
-            'departement_id' => $departement->id,
-            'product_id' => Product::where('name', 'Pink')->first()->id,
-            'quantity' => 10
-        ]);
+        // ProductDepartement::create([
+        //     'departement_id' => $departement->id,
+        //     'product_id' => Product::where('name', 'Pink')->first()->id,
+        //     'quantity' => 10
+        // ]);
 
-        //Biru Tua : Qty: 16
-        ProductDepartement::create([
-            'departement_id' => $departement->id,
-            'product_id' => Product::where('name', 'Biru Tua')->first()->id,
-            'quantity' => 16
-        ]);
+        // //Biru Tua : Qty: 16
+        // ProductDepartement::create([
+        //     'departement_id' => $departement->id,
+        //     'product_id' => Product::where('name', 'Biru Tua')->first()->id,
+        //     'quantity' => 16
+        // ]);
 
-        //Cream : Qty: 8
-        ProductDepartement::create([
-            'departement_id' => $departement->id,
-            'product_id' => Product::where('name', 'Cream')->first()->id,
-            'quantity' => 9
-        ]);
+        // //Cream : Qty: 8
+        // ProductDepartement::create([
+        //     'departement_id' => $departement->id,
+        //     'product_id' => Product::where('name', 'Cream')->first()->id,
+        //     'quantity' => 9
+        // ]);
 
     }
 }

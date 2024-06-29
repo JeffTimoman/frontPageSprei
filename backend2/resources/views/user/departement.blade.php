@@ -22,9 +22,9 @@
         }
     </style>
 @endsection
-
-@section('content')
-    <div class="topbar d-flex justify-content-around align-items-center col-md-12 p-0 m-0" style="background: #2f27ce; position:sticky; top:0 ;">
+@section('topbar')
+    <div class="topbar d-flex justify-content-around align-items-center col-md-12 p-0 m-0"
+        style="background: #2f27ce; position:sticky; top:0 ;">
         <a href="#" class="text-white text-center py-3 col-md-1">
             {{-- <i class="fa-solid fa-arrow-left"></i> --}}
         </a>
@@ -33,12 +33,15 @@
             {{-- <i class="fas fa-search"></i> --}}
         </a>
     </div>
+@endsection
+@section('content')
+
 
     <div class="mt-3" style="">
         <div class="container">
             <div class="card p-2 d-flex align-items-center justify-content-center" style=";">
                 <div class="card-title d-flex align-items-center justify-content-center">
-                    <h2 class="m-0">Class : {{$departement->name}}</h2>
+                    <h2 class="m-0">Class : {{ $departement->name }}</h2>
                 </div>
             </div>
         </div>
@@ -53,18 +56,18 @@
         </div>
     </div>
 
-    <div class="col-md-12">
-        <div class="container" style="height: 55vh; overflow-y:scroll; position: relative;">
+    <div class="col-md-12" style="height: 80%; overflow-y:scroll; position: relative;">
+        <div class="container">
             <div class="mb-4">
                 <ul class="list-group list-group-flush">
                     @foreach ($departement->users as $item)
-                        <li class="list-group-item d-flex align-items-center justify-content-around"><span>{{$item->name}}</span> | <span>{{$item->email}}</span></li>
+                        <li class="list-group-item d-flex align-items-center justify-content-around">
+                            <span>{{ $item->name }}</span> | <span>{{ $item->email }}</span></li>
                     @endforeach
                     @if ($departement->users->count() == 0)
                         <li class="list-group-item d-flex align-items-center justify-content-around">No Member Yet.</li>
-
                     @endif
-                  </ul>
+                </ul>
             </div>
         </div>
     </div>
@@ -75,8 +78,6 @@
 @endsection
 
 @section('script')
-<script>
-
-</script>
+    <script></script>
 
 @endsection
