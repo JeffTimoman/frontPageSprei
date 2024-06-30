@@ -169,7 +169,7 @@ Route::prefix('admin')->group(function () {
             return $transaction->user->departement->name . $transaction->user->name;
         });
         return view('admin.index2', ['transactions' => $transactions, 'name' => $name]);
-    })->name('admin.index2');
+    })->name('admin.index2')->middleware([isLogin::class, isAdmin::class]);
 
     Route::get('/env', function () {
         return view('admin.edit_env_variables');
