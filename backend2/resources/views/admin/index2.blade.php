@@ -92,13 +92,13 @@
                         extend: 'csvHtml5',
                         text: 'Export CSV',
                         className: 'btn btn-success',
-                        filename: 'DataSprei' // Change the filename here
+                        filename: '{{ $name }}' // Change the filename here
                     },
                     {
                         extend: 'excelHtml5',
                         text: 'Import Excel',
                         className: 'btn btn-primary',
-                        filename: 'DataSprei' // Change the filename here
+                        filename: '{{ $name }}' // Change the filename here
                     }
                 ],
             });
