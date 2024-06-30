@@ -36,10 +36,16 @@ Route::post('/login', function (Request $request) {
     $allow_login = WebVariable::where('name', 'AllowLogin')->first();
     if (auth()->attempt($credentials)) {
         $request->session()->regenerate();
+
+        if(auth()->user()->role == 'admin'){
+            return redirect()->route('admin.index')->with('success', 'Login success');
+        }
+
         if (auth()->user()->role != 'admin' && $allow_login->value == '0') {
             auth()->logout();
             return back()->with('error', 'The application is closed for now.');
         }
+
         return redirect()->route('user.index')->with('success', 'Login success');
     }
 
