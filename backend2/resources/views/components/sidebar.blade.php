@@ -8,18 +8,34 @@
         </div>
     </div>
     <ul class="sidebar-nav">
+        <li class="sidebar-item">
+            <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                data-bs-target="#auth" aria-expanded="false" aria-controls="auth">
+                <i class="lni lni-agenda"></i>
+                <span>Data Sprei</span>
+            </a>
+            <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                <li class="sidebar-item">
+                    <a href="{{route('admin.index')}}" class="sidebar-link">By User</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">By Color</a>
+                </li>
+            </ul>
+        </li>
         {{-- <li class="sidebar-item">
             <a href="{{route('admin.index')}}" class="sidebar-link">
                 <i class="lni lni-user"></i>
                 <span>Index By User</span>
             </a>
         </li> --}}
-        <li class="sidebar-item">
+
+        {{-- <li class="sidebar-item">
             <a href="{{route('admin.index')}}" class="sidebar-link">
                 <i class="lni lni-agenda"></i>
                 <span>Data Sprei</span>
             </a>
-        </li>
+        </li> --}}
         {{-- <li class="sidebar-item">
             <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
                 data-bs-target="#auth" aria-expanded="false" aria-controls="auth">

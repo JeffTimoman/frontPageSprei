@@ -16,7 +16,7 @@
                     <form action="" method="GET">
 
                         <label for="departement" class="form-label">Class</label>
-                        <select class="form-select" aria-label="Default select example" name="departement">
+                        <select class="form-select" aria-label="Default select example" name="departement" id="departementSelect">
                             @if (request()->has('departement'))
                                 <option value="">All</option>
                                 @foreach ($departements as $item)
@@ -38,9 +38,6 @@
                 <div class="col-md-3"></div>
                 <div class="col-md-3"></div>
                 <div class="col-md-3"></div>
-                <div class="col-md-12 mt-1">
-                    <button class="btn btn-primary" type="submit">Search</button>
-                </div>
                 </form>
             </div>
             <div class="card-body" style="height: 60vh; overflow-y: scroll;">
@@ -127,9 +124,13 @@
                         className: 'btn btn-primary',
                         filename: 'DataSprei' // Change the filename here
                     }
-                ]
+                ],
             });
+            $('#departementSelect').change(function() {
+                window.location.href = `{{ route('admin.index') }}?departement=${$(this).val()}`
+            })
         });
+    </script>
     </script>
     </script>
 

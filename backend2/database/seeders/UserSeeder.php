@@ -14,14 +14,11 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $departements = Departement::all();
-
         for($i = 0; $i < 30; $i++) {
-            $departement = $departements->random();
             User::create([
-                'name' => 'User ' . $i,
+                'name' => fake()->name(),
                 'email'=> 'user' . $i . '@gmail.com',
-                'departement_id' => $departement->id,
+                'departement_id' => 2,
                 'password' => bcrypt('admin123')
             ]);
         }
