@@ -3,6 +3,7 @@
 use App\Http\Middleware\isAdmin;
 use App\Http\Middleware\isLogin;
 use App\Http\Middleware\isNotLogin;
+use App\Models\Product;
 use App\Models\ProductDepartement;
 use App\Models\Transaction;
 use App\Models\User;
@@ -14,7 +15,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     $departement = auth()->user()->departement;
     $productDepartements = ProductDepartement::where('departement_id', $departement->id)->get();
-
+    // sort by product name
+    $productDepartements = $productDepartements->sortBy(function ($productDepartement) {
+        return $productDepartement->product->name;
+    });
     // $transactions = Transaction::whereHas('user', function($query) use ($departement){
     //     $query->where('departement_id', $departement->id);
     // })->get();
@@ -117,6 +121,7 @@ Route::get('/{id}/detail', function ($id) {
 
 Route::get('/class', function () {
     $departement = auth()->user()->departement;
+    // sort by user.name
     return view('user.departement', ['departement' => $departement]);
 })->name('departement.detail')->middleware(isLogin::class);
 
@@ -145,6 +150,25 @@ Route::prefix('admin')->group(function () {
         return view('admin.index', ['users' => $users]);
     })->name('admin.index')->middleware([isLogin::class, isAdmin::class]);
 
+    Route::get('/index2', function (Request $request) {
+        $name = $request->name;
+        if ($request->name == '' || $name == null) {
+            $name = Product::orderBy('name')->first()->name;
+        }
+
+        $transactions = Transaction::whereHas('productDepartement', function ($query) use ($name) {
+            $query->whereHas('product', function ($query) use ($name) {
+                $query->where('name', $name);
+            });
+        })->get();
+
+        // sort transactions by user departement name then by user name
+        $transactions = $transactions->sortBy(function ($transaction) {
+            return $transaction->user->departement->name . $transaction->user->name;
+        });
+        return view('admin.index2', ['transactions' => $transactions, 'name' => $name]);
+    })->name('admin.index2');
+
     Route::get('/env', function () {
         return view('admin.edit_env_variables');
     })->name('admin.edit_env_variables')->middleware([isLogin::class, isAdmin::class])->name('admin.edit_env_variables');
@@ -157,4 +181,4 @@ Route::prefix('admin')->group(function () {
         }
         return redirect()->back();
     })->middleware([isLogin::class, isAdmin::class]);
-});
+})->middleware([isLogin::class, isAdmin::class]);

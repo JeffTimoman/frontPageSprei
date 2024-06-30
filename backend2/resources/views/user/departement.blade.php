@@ -60,7 +60,10 @@
         <div class="container">
             <div class="mb-4">
                 <ul class="list-group list-group-flush">
-                    @foreach ($departement->users as $item)
+                    @php
+                        $sorted_users = $departement->users->sortBy('name');
+                    @endphp
+                    @foreach ($sorted_users as $item)
                         <li class="list-group-item d-flex align-items-center justify-content-around">
                             <span>{{ $item->name }}</span> | <span>{{ $item->email }}</span></li>
                     @endforeach
