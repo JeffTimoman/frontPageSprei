@@ -18,8 +18,9 @@
                         <label for="departement" class="form-label">Class</label>
                         <select class="form-select" aria-label="Default select example" name="name" id="nameSelect">
                             @foreach ($products as $item)
-                                <option value="{{ $item->name }}">{{ $item->name }}</option>
+                                <option value="{{ $item->name }}" @if ($item->name == request('name')) selected @endif>{{ $item->name }}</option>
                             @endforeach
+                        </select>
                         </select>
                 </div>
                 <div class="col-md-3"></div>
@@ -102,7 +103,7 @@
                 ],
             });
             $('#nameSelect').change(function() {
-                window.location.href = `{{ route('admin.index2') }}?color=${$(this).val()}`
+                window.location.href = `{{ route('admin.index2') }}?name=${$(this).val()}`
             })
         });
     </script>

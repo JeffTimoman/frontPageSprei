@@ -152,15 +152,17 @@ Route::prefix('admin')->group(function () {
 
     Route::get('/index2', function (Request $request) {
         $name = $request->name;
-        if ($request->name == '' || $name == null) {
+        if ($name == '' || $name == null) {
             $name = Product::orderBy('name')->first()->name;
         }
 
+        // get transactions which has the product name in the request
         $transactions = Transaction::whereHas('productDepartement', function ($query) use ($name) {
             $query->whereHas('product', function ($query) use ($name) {
                 $query->where('name', $name);
             });
         })->get();
+
 
         // sort transactions by user departement name then by user name
         $transactions = $transactions->sortBy(function ($transaction) {

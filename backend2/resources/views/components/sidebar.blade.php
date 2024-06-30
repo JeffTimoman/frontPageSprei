@@ -19,7 +19,7 @@
                     <a href="{{route('admin.index')}}" class="sidebar-link">By User</a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="#" class="sidebar-link">By Color</a>
+                    <a href="{{route('admin.index2')}}" class="sidebar-link">By Color</a>
                 </li>
             </ul>
         </li>
