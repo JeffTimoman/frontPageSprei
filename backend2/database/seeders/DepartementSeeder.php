@@ -13,18 +13,22 @@ class DepartementSeeder extends Seeder
      */
     public function run(): void
     {
-        Departement::create([
-            'name' => 'PPTI 20'
-        ]);
-        Departement::create([
-            'name' => 'PPTI 21'
-        ]);
-        Departement::create([
-            'name' => 'PPTI 22'
-        ]);
+        // Departement::create([
+        //     'name' => 'PPTI 20'
+        // ]);
+        // Departement::create([
+        //     'name' => 'PPTI 21'
+        // ]);
+        // Departement::create([
+        //     'name' => 'PPTI 22'
+        // ]);
 
         Departement::create([
             'name' => 'ADMIN'
+        ]);
+
+        Departement::create([
+            'name' => 'FRONTPAGE'
         ]);
     }
 }
