@@ -2,7 +2,7 @@
 @section('title', 'Departement List')
 
 @section('content')
-    {{-- <div class="row col-md-12 mt-3 d-flex align-items-center justify-content-center" > --}}
+    <div class="row col-md-12 mt-3 d-flex align-items-center justify-content-center">
         <div class="text-center col-md-12">
             <h1>Data Sprei User</h1>
         </div>
@@ -16,7 +16,8 @@
                     <form action="" method="GET">
 
                         <label for="departement" class="form-label">Class</label>
-                        <select class="form-select" aria-label="Default select example" name="departement" id="departementSelect">
+                        <select class="form-select" aria-label="Default select example" name="departement"
+                            id="departementSelect">
                             @if (request()->has('departement'))
                                 <option value="">All</option>
                                 @foreach ($departements as $item)
@@ -40,41 +41,37 @@
                 <div class="col-md-3"></div>
                 </form>
             </div>
-            <div class="card-body" style="">
+            <div class="card-body">
                 <table class="table" id="datatable">
                     <thead>
                         <tr>
-                            <th scope="col">No</th>
+                            <th scope="col">ID</th>
                             <th scope="col">Name</th>
+                            <th scope="col">Email</th>
                             <th scope="col">Class</th>
-                            <th scope="col">Color 1</th>
-                            <th scope="col">Color 2</th>
+                            <th scope="col">Password</th>
+                            <th scope="col">IP</th>
+                            <th scope="">Limit</th>
                         </tr>
                     </thead>
 
-                    <tbody style=" overflow: scroll; max-height: 60vh;">
+                    <tbody style=" overflow: scroll; max-height: 60vh; max-width: 100% ;">
                         @foreach ($users as $item)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $item->id }}</td>
                                 <td>{{ $item->name }}</td>
+                                <td>{{ $item->email }}</td>
                                 <td>{{ $item->departement->name }}</td>
-                                @if ($item->transactions->count() == 0)
-                                    <td>-</td>
-                                    <td>-</td>
-                                @elseif ($item->transactions->count() == 1)
-                                    <td>{{ $item->transactions[0]->productDepartement->product->name }}</td>
-                                    <td>-</td>
-                                @else
-                                    <td>{{ $item->transactions[0]->productDepartement->product->name }}</td>
-                                    <td>{{ $item->transactions[1]->productDepartement->product->name }}</td>
-                                @endif
+                                <td>{{ $item->password }}</td>
+                                <td>{{ $item->ip }}</td>
+                                <td>{{ $item->buying_limit }}</td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
-    {{-- </div> --}}
+    </div>
 @endsection
 
 @section('script')
@@ -116,22 +113,25 @@
                         extend: 'csvHtml5',
                         text: 'Export CSV',
                         className: 'btn btn-success',
-                        filename: 'DataSprei' // Change the filename here
+                        filename: 'Users' // Change the filename here
                     },
                     {
                         extend: 'excelHtml5',
                         text: 'Export Excel',
                         className: 'btn btn-primary',
-                        filename: 'DataSprei' // Change the filename here
+                        filename: 'Users' // Change the filename here
                     }
                 ],
             });
-            $('#departementSelect').change(function() {
-                window.location.href = `{{ route('admin.index') }}?departement=${$(this).val()}`
-            })
         });
     </script>
-    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#departementSelect').change(function() {
+                window.location.href = `?departement=${$(this).val()}`;
+            });
+        });
     </script>
 
 @endsection

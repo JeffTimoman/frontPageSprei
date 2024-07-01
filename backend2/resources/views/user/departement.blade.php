@@ -47,25 +47,25 @@
         </div>
     </div>
 
-    @include('components.alert')
+    {{-- @include('components.alert') --}}
 
     <div class="col-md-12 mt-1">
         <div class="container">
-            <h3 class="p-2" style="border-bottom: solid #433bff 1px;">Members</small>
+        <h3 class="p-2" style="border-bottom: solid #433bff 1px;">Members</small>
             </h3>
         </div>
     </div>
 
-    <div class="col-md-12" style="height: 80%; overflow-y:scroll; position: relative;">
+    <div class="col-md-12 pb-4" style="height: 80vh; overflow-y:scroll; position: relative;">
         <div class="container">
-            <div class="mb-4">
+            <div class="">
                 <ul class="list-group list-group-flush">
                     @php
                         $sorted_users = $departement->users->sortBy('name');
                     @endphp
                     @foreach ($sorted_users as $item)
                         <li class="list-group-item d-flex align-items-center justify-content-around">
-                            <span>{{ $item->name }}</span> | <span>{{ $item->email }}</span></li>
+                            <span>{{ $item->name }}</span></li>
                     @endforeach
                     @if ($departement->users->count() == 0)
                         <li class="list-group-item d-flex align-items-center justify-content-around">No Member Yet.</li>

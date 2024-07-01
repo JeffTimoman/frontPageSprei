@@ -20,7 +20,7 @@ class WebVariableSeeder extends Seeder
 
         WebVariable::create([
             'name' => 'BlockClaimTime',
-            'value' => '2024-06-29 23:59:59'
+            'value' => '2024-07-08 23:59:59'
         ]);
     }
 }

@@ -28,7 +28,15 @@ class DepartementSeeder extends Seeder
         ]);
 
         Departement::create([
-            'name' => 'FRONTPAGE'
+            'name' => 'PPTI 20'
+        ]);
+
+        Departement::create([
+            'name' => 'PPTI 21'
+        ]);
+
+        Departement::create([
+            'name' => 'PPTI 22'
         ]);
     }
 }

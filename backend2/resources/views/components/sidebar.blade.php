@@ -9,6 +9,12 @@
     </div>
     <ul class="sidebar-nav">
         <li class="sidebar-item">
+            <a href="{{route('admin.users')}}" class="sidebar-link">
+                <i class="lni lni-user"></i>
+                <span>Users</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
             <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
                 data-bs-target="#auth" aria-expanded="false" aria-controls="auth">
                 <i class="lni lni-agenda"></i>
@@ -23,12 +29,6 @@
                 </li>
             </ul>
         </li>
-        {{-- <li class="sidebar-item">
-            <a href="{{route('admin.index')}}" class="sidebar-link">
-                <i class="lni lni-user"></i>
-                <span>Index By User</span>
-            </a>
-        </li> --}}
 
         {{-- <li class="sidebar-item">
             <a href="{{route('admin.index')}}" class="sidebar-link">

@@ -163,13 +163,9 @@
     <div class="wrapper">
         @include('components.sidebar')
         <div class="main p-2">
-            @include('components.alert')
-            <div class="container m-2 d-flex align-items-center justify-content-center">
+            <div class="container-fluid m-2 d-flex align-items-center justify-content-center row px-4">
+                @include('components.alert')
                 @yield('content')
-                <div class="row">
-                    <div class="col-md-12">
-                    </div>
-                </div>
             </div>
         </div>
     </div>

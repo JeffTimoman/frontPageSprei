@@ -15,7 +15,7 @@
                     @endphp
                     <form action="" method="GET">
 
-                        <label for="departement" class="form-label">Class</label>
+                        <label for="departement" class="form-label">Color</label>
                         <select class="form-select" aria-label="Default select example" name="name" id="nameSelect">
                             @foreach ($products as $item)
                                 <option value="{{ $item->name }}" @if ($item->name == request('name')) selected @endif>{{ $item->name }}</option>
@@ -28,7 +28,7 @@
                 <div class="col-md-3"></div>
                 </form>
             </div>
-            <div class="card-body" style="height: 60vh; overflow-y: scroll;">
+            <div class="card-body">
                 <table class="table" id="datatable">
                     <thead>
                         <tr>
@@ -38,7 +38,7 @@
                         </tr>
                     </thead>
 
-                    <tbody>
+                    <tbody  style=" overflow: scroll; max-height: 60vh; max-width: 100%;">
                         @foreach ($transactions as $item)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
@@ -96,7 +96,7 @@
                     },
                     {
                         extend: 'excelHtml5',
-                        text: 'Import Excel',
+                        text: 'Export Excel',
                         className: 'btn btn-primary',
                         filename: '{{ $name }}' // Change the filename here
                     }

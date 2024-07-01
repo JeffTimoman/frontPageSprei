@@ -14,7 +14,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     $departement = auth()->user()->departement;
+
     $productDepartements = ProductDepartement::where('departement_id', $departement->id)->get();
+    // only get productDepartements where user->
     // sort by product name
     $productDepartements = $productDepartements->sortBy(function ($productDepartement) {
         return $productDepartement->product->name;
@@ -36,9 +38,10 @@ Route::post('/login', function (Request $request) {
     $allow_login = WebVariable::where('name', 'AllowLogin')->first();
     if (auth()->attempt($credentials)) {
         $request->session()->regenerate();
-
+        auth()->user()->ip = $request->ip();
+        auth()->user()->save();
         if(auth()->user()->role == 'admin'){
-            return redirect()->route('admin.index')->with('success', 'Login success');
+            return redirect()->route('admin.users')->with('success', 'Login success');
         }
 
         if (auth()->user()->role != 'admin' && $allow_login->value == '0') {
@@ -75,23 +78,23 @@ Route::post('/claim', function (Request $request) {
 
         // Compare the parsed block claim time with the current time
         if ($block_claim_time_parsed->lessThan($current_time)) {
-            return redirect(route('user.index') . '/#claimNo' . $request->id)->with('error', 'Claim failed due to time running out.');
+            return redirect(route('user.index'))->with('error', 'Claim failed due to time running out.');
         }
 
         // Proceed with your logic if the current time has not passed the BlockClaimTime
     }
     if (auth()->user()->buying_limit <= 0) {
-        return redirect(route('user.index') . '/#claimNo' . $request->id)->with('error', 'Claim failed because you have claimed two products.');
+        return redirect(route('user.index'))->with('error', 'Claim failed because you have claimed two products.');
     }
 
     $departement = auth()->user()->departement;
     if ($productDepartement->departement_id != $departement->id) {
-        return redirect(route('user.index') . '/#claimNo' . $request->id)->with('error', 'Claim failed');
+        return redirect(route('user.index'))->with('error', 'Claim failed');
     }
 
     $transactions = Transaction::where('product_departement_id', $productDepartement->id)->get();
     if ($productDepartement->quantity <= $transactions->count()) {
-        return redirect(route('user.index') . '/#claimNo' . $request->id)->with('error', 'Claim failed because the product is out of stock');
+        return redirect(route('user.index'))->with('error', 'Claim failed because the product is out of stock');
     }
 
     //transactions of all user in this departement
@@ -104,7 +107,7 @@ Route::post('/claim', function (Request $request) {
     $check = Transaction::where('product_departement_id', $productDepartement->id)->where('user_id', auth()->id())->first();
 
     if ($check && $check2 != 1) {
-        return redirect(route('user.index') . '/#claimNo' . $request->id)->with('error', 'Claim failed because you have claimed this product.');
+        return redirect(route('user.index'))->with('error', 'Claim failed because you have claimed this product.');
     }
 
 
@@ -116,7 +119,7 @@ Route::post('/claim', function (Request $request) {
     auth()->user()->buying_limit -= 1;
     auth()->user()->save();
 
-    return redirect(route('user.index') . '/#claimNo' . $request->id)->with('success', 'Claim success');
+    return redirect(route('user.index'))->with('success', 'Claim success');
 })->name('user.claim')->middleware(isLogin::class);
 
 Route::get('/{id}/detail', function ($id) {
@@ -149,6 +152,11 @@ Route::prefix('admin')->group(function () {
         if ($request->has('departement') && $request->departement != '') {
             $users = User::where('departement_id', $request->departement)->get();
         }
+
+        // only get users who is not admin
+        $users = $users->filter(function ($user) {
+            return $user->role != 'admin';
+        });
         // sort by departement name then by user name
         $users = $users->sortBy(function ($user) {
             return $user->departement->name . $user->name;
@@ -176,7 +184,16 @@ Route::prefix('admin')->group(function () {
         });
         return view('admin.index2', ['transactions' => $transactions, 'name' => $name]);
     })->name('admin.index2')->middleware([isLogin::class, isAdmin::class]);
-
+    Route::get('/users', function (Request $request){
+        $users = User::all();
+        if ($request->has('departement') && $request->departement != '') {
+            $users = User::where('departement_id', $request->departement)->get();
+        }
+        $users = $users->sortBy(function ($user) {
+            return $user->departement->name . $user->name;
+        });
+        return view('admin.users', ['users' => $users]);
+    })->name('admin.users')->middleware([isLogin::class, isAdmin::class]);
     Route::get('/env', function () {
         return view('admin.edit_env_variables');
     })->name('admin.edit_env_variables')->middleware([isLogin::class, isAdmin::class])->name('admin.edit_env_variables');

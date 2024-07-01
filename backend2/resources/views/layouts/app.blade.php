@@ -22,9 +22,12 @@
 </head>
 
 <body>
-    @yield('topbar')
-    <div class="container-sm p-0 m-0" style="max-width: 100vw; background: #fbfbfe; height: 80vh; overflow-y: scroll; overflow-x: hidden;">
-        <div class="row" style="overflow-y: hidden; height: 100%;">
+    <div class="" style="position: fixed; bottom: 5vh; width: 100vw; z-index: 9999;">
+        @include('components.alert')
+    </div>
+    <div class="container-sm p-0 m-0" style="max-width: 100vw; background: #fbfbfe; height: 100vh; overflow-y: scroll; overflow-x: hidden;">
+        @yield('topbar')
+        <div class="row" >
             @yield('content')
         </div>
     </div>

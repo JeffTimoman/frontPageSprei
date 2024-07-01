@@ -56,22 +56,22 @@
             </h3>
         </div>
     </div>
-    <div class="col-md-12" style="height: 75%; overflow-y:scroll; position: relative;">
-        <div class="container">
+    <div class="container pb-2">
+        <div class="col-md-12 pb-5 d-flex align-items-center justify-content-center row mb-3" style="height: 75vh; overflow-y:scroll; position: relative;">
 
-            @foreach ($transactions as $item)
-                <div class="card mt-2 d-flex align-items-center" style="width: 100%;">
-                    <div class="d-flex align-items-center justify-content-center">
-                        <img src="{{asset('images/'.$item->productDepartement->product->image)}}"
-                            class="card-img-top" style="max-width: 200px; background" alt="...">
-                    </div>
+                @foreach ($transactions as $item)
+                    <div class="card mt-2 d-flex align-items-center" style="width: 100%;">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <img src="{{asset('images/'.$item->productDepartement->product->image)}}"
+                                class="card-img-top" style="max-width: 200px; background" alt="...">
+                        </div>
 
-                    <div class="card-body text-center row">
-                        <h5 class="card-title">Color : {{ $item->productDepartement->product->name }} </h5>
-                        <small>{{ $item->created_at }}</small>
+                        <div class="card-body text-center row">
+                            <h5 class="card-title">Color : {{ $item->productDepartement->product->name }} </h5>
+                            <small>{{ $item->created_at }}</small>
+                        </div>
                     </div>
-                </div>
-            @endforeach
+                @endforeach
         </div>
     </div>
 
