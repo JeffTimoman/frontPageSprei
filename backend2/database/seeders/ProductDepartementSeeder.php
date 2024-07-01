@@ -31,18 +31,18 @@ class ProductDepartementSeeder extends Seeder
             'quantity' => 7
         ]);
 
-        //Blue Mint : Qty: 16
+        //Blue Mint : Qty: 17
         ProductDepartement::create([
             'departement_id' => $departement->id,
             'product_id' => Product::where('name', 'Blue Mint')->first()->id,
-            'quantity' => 16
+            'quantity' => 17
         ]);
 
-        //Pink : Qty: 10
+        //Pink : Qty: 11
         ProductDepartement::create([
             'departement_id' => $departement->id,
             'product_id' => Product::where('name', 'Pink')->first()->id,
-            'quantity' => 10
+            'quantity' => 11
         ]);
 
         //Biru Tua : Qty: 17
@@ -76,19 +76,19 @@ class ProductDepartementSeeder extends Seeder
             'quantity' => 7
         ]);
 
-        //Blue Mint : Qty: 16
+        //Blue Mint : Qty: 17
 
         ProductDepartement::create([
             'departement_id' => $departement->id,
             'product_id' => Product::where('name', 'Blue Mint')->first()->id,
-            'quantity' => 16
+            'quantity' => 17
         ]);
 
-        //Pink : Qty: 10
+        //Pink : Qty: 11
         ProductDepartement::create([
             'departement_id' => $departement->id,
             'product_id' => Product::where('name', 'Pink')->first()->id,
-            'quantity' => 10
+            'quantity' => 11
         ]);
 
         //Biru Tua : Qty: 17
@@ -129,11 +129,11 @@ class ProductDepartementSeeder extends Seeder
             'quantity' => 16
         ]);
 
-        //Pink : Qty: 10
+        //Pink : Qty: 12
         ProductDepartement::create([
             'departement_id' => $departement->id,
             'product_id' => Product::where('name', 'Pink')->first()->id,
-            'quantity' => 10
+            'quantity' => 12
         ]);
 
         //Biru Tua : Qty: 16

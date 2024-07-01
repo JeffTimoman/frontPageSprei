@@ -30,12 +30,12 @@
             </ul>
         </li>
 
-        {{-- <li class="sidebar-item">
-            <a href="{{route('admin.index')}}" class="sidebar-link">
-                <i class="lni lni-agenda"></i>
-                <span>Data Sprei</span>
+        <li class="sidebar-item">
+            <a href="{{route('admin.products')}}" class="sidebar-link">
+                <i class="lni lni-layout"></i>
+                <span>Product</span>
             </a>
-        </li> --}}
+        </li>
         {{-- <li class="sidebar-item">
             <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
                 data-bs-target="#auth" aria-expanded="false" aria-controls="auth">

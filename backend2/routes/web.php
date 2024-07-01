@@ -3,6 +3,7 @@
 use App\Http\Middleware\isAdmin;
 use App\Http\Middleware\isLogin;
 use App\Http\Middleware\isNotLogin;
+use App\Models\Departement;
 use App\Models\Product;
 use App\Models\ProductDepartement;
 use App\Models\Transaction;
@@ -197,7 +198,16 @@ Route::prefix('admin')->group(function () {
     Route::get('/env', function () {
         return view('admin.edit_env_variables');
     })->name('admin.edit_env_variables')->middleware([isLogin::class, isAdmin::class])->name('admin.edit_env_variables');
-
+    Route::get('/products', function(){
+        $products = Product::all();
+        $products = $products->sortBy('name');
+        $departements = Departement::all();
+        // exclude ADMIN departement
+        $departements = $departements->filter(function ($departement) {
+            return $departement->name != 'ADMIN';
+        });
+        return view('admin.products', ['products' => $products, 'departements' => $departements]);
+    })->name('admin.products')->middleware([isLogin::class, isAdmin::class]);
     Route::post('/env', function (Request $request) {
         $WebVariables = WebVariable::all();
         foreach ($WebVariables as $WebVariable) {

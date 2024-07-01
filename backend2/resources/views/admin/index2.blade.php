@@ -18,9 +18,9 @@
                         <label for="departement" class="form-label">Color</label>
                         <select class="form-select" aria-label="Default select example" name="name" id="nameSelect">
                             @foreach ($products as $item)
-                                <option value="{{ $item->name }}" @if ($item->name == request('name')) selected @endif>{{ $item->name }}</option>
+                                <option value="{{ $item->name }}" @if ($item->name == request('name')) selected @endif>
+                                    {{ $item->name }}</option>
                             @endforeach
-                        </select>
                         </select>
                 </div>
                 <div class="col-md-3"></div>
@@ -38,7 +38,7 @@
                         </tr>
                     </thead>
 
-                    <tbody  style=" overflow: scroll; max-height: 60vh; max-width: 100%;">
+                    <tbody style=" overflow: scroll; max-height: 60vh; max-width: 100%;">
                         @foreach ($transactions as $item)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
