@@ -4,7 +4,7 @@
 @section('content')
     <div class="row col-md-12 mt-3 d-flex align-items-center justify-content-center">
         <div class="text-center col-md-12">
-            <h1>Data Sprei User</h1>
+            <h1>Data User</h1>
         </div>
 
         <div class="card m-0 p-0">
