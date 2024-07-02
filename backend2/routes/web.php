@@ -98,12 +98,20 @@ Route::post('/claim', function (Request $request) {
         return redirect(route('user.index'))->with('error', 'Claim failed because the product is out of stock');
     }
 
-    //transactions of all user in this departement
-    $transactions = Transaction::whereHas('user', function ($query) use ($departement) {
-        $query->where('departement_id', $departement->id);
-    })->get();
-    $quantity_of_all_product = ProductDepartement::where('departement_id', $departement->id)->sum('quantity');
-    $check2 = $quantity_of_all_product - $transactions->count();
+    $counter = 0;
+    $check2 = 1;
+    $productDepartements = ProductDepartement::where('departement_id', $departement->id)->get();
+    foreach ($productDepartements as $item) {
+        $transactions = $item->transactions->where('product_departement_id', $item->id)->count();
+        // dump($transactions);
+        if ($transactions < $item->quantity) {
+            $counter++;
+        }
+        if ($counter > 1) {
+            $check2 = 0;
+            break;
+        }
+    }
 
     $check = Transaction::where('product_departement_id', $productDepartement->id)->where('user_id', auth()->id())->first();
 
@@ -222,7 +230,6 @@ Route::prefix('admin')->group(function () {
         if(!$user){
             return redirect()->back()->with('error', 'User not found');
         }
-
         $user->password = bcrypt($request->password);
         $user->save();
         return redirect()->back()->with('success', 'Password reset success');

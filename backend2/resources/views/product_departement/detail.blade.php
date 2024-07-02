@@ -65,7 +65,7 @@
             <div class="mb-4">
                 <ul class="list-group list-group-flush">
                     @foreach ($productDepartement->transactions as $item)
-                        <li class="list-group-item d-flex align-items-center justify-content-around"><span>{{$item->user->name}}</span> | <span>{{$item->created_at}}</span> </li>
+                        <li class="list-group-item d-flex align-items-center justify-content-around"><span>{{$item->user->name}}</span> </li>
                     @endforeach
                     @if ($productDepartement->transactions->count() == 0)
                         <li class="list-group-item d-flex align-items-center justify-content-around">No Claims Yet.</li>
