@@ -88,7 +88,7 @@
                 <form id="resetPasswordForm" action="{{ route('admin.reset_password') }}" method="POST">
                     @csrf
                     <div class="modal-body">
-                        <input type="text" name="email" id="user_email">
+                        <input type="hidden" name="email" id="user_email">
                         <div class="mb-3">
                             <label for="new_password" class="form-label">New Password</label>
                             <input type="password" class="form-control" id="new_password" name="password" required>
