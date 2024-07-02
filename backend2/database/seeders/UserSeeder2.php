@@ -14,14 +14,14 @@ class UserSeeder2 extends Seeder
      */
     public function run(): void
     {
-
+        User::where('id', 108)->delete();
         User::create([
             'name' => 'Jayadi Steven',
-            'email' => '',
+            'email' => 'jayadisteven1@gmail.com',
             'password' => bcrypt('pas085156227671'),
             'departement_id' => Departement::where('name', 'PPTI 22')->first()->id
         ]);
         // delete user with email madewikanta1@gmail.com
-        User::where('email', 'madewikanta1@gmail.com')->delete();
+        // User::where('email', 'madewikanta1@gmail.com')->delete();
     }
 }
