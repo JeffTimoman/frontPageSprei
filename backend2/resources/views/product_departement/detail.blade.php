@@ -41,7 +41,7 @@
                     <h2>Color : {{$productDepartement->product->name}}</h2>
                 </div>
                 <div class="card-image">
-                    <img src="{{$productDepartement->product->image}}"
+                    <img src="{{ asset('images/' . $productDepartement->product->image)}}"
                                 class="card-img-top" style="max-width: 200px;" alt="...">
                 </div>
                 <div class="card-body">
