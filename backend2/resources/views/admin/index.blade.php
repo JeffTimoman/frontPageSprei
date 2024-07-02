@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title', 'Departement List')
+@section('title', 'Data Sprei')
 
 @section('content')
     {{-- <div class="row col-md-12 mt-3 d-flex align-items-center justify-content-center" > --}}
