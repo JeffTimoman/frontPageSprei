@@ -216,4 +216,15 @@ Route::prefix('admin')->group(function () {
         }
         return redirect()->back();
     })->middleware([isLogin::class, isAdmin::class]);
+    Route::post('/reset_password', function(Request $request){
+        $email = $request->email;
+        $user = User::where('email', $email)->first();
+        if(!$user){
+            return redirect()->back()->with('error', 'User not found');
+        }
+
+        $user->password = bcrypt($request->password);
+        $user->save();
+        return redirect()->back()->with('success', 'Password reset success');
+    })->name('admin.reset_password')->middleware([isLogin::class, isAdmin::class]);
 })->middleware([isLogin::class, isAdmin::class]);

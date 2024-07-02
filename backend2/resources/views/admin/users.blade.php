@@ -51,7 +51,8 @@
                             <th scope="col">Class</th>
                             <th scope="col">Password</th>
                             <th scope="col">IP</th>
-                            <th scope="">Limit</th>
+                            <th scope="col">Limit</th>
+                            <th scope="col">Action</th>
                         </tr>
                     </thead>
 
@@ -65,10 +66,39 @@
                                 <td>{{ $item->password }}</td>
                                 <td>{{ $item->ip }}</td>
                                 <td>{{ $item->buying_limit }}</td>
+                                <td>
+                                    <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#resetPasswordModal" data-user-id="{{ $item->id }}">Reset</button>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Password Modal -->
+    <div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-labelledby="resetPasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resetPasswordModalLabel">Reset Password</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="resetPasswordForm" action="{{ route('admin.reset_password') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <input type="text" name="email" id="user_email">
+                        <div class="mb-3">
+                            <label for="new_password" class="form-label">New Password</label>
+                            <input type="password" class="form-control" id="new_password" name="password" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Reset Password</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -124,14 +154,17 @@
                 ],
             });
         });
-    </script>
 
-    <script>
-        $(document).ready(function() {
-            $('#departementSelect').change(function() {
-                window.location.href = `?departement=${$(this).val()}`;
-            });
+        $('#resetPasswordModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget);
+            var userId = button.data('user-id');
+            var email = button.parent().siblings().eq(2).text();
+            var modal = $(this);
+            modal.find('#user_email').val(email);
+        });
+
+        $('#departementSelect').change(function() {
+            window.location.href = `?departement=${$(this).val()}`;
         });
     </script>
-
 @endsection
