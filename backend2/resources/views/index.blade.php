@@ -40,7 +40,7 @@
         <div class="container row-md-12 d-flex align-items-center justify-content-center ">
             <div class="col-md-12">
                 <div class="card p-2" style="background: #433bff;">
-                    <h2 class="text-center" style="color: white; ">Time Left</h2>
+                    <h2 class="text-center" style="color: white; ">You can buy in : </h2>
                     <div class="card-body">
                         @php
                             $time = \App\Models\WebVariable::where('name', 'BlockClaimTime')->first();
@@ -230,7 +230,7 @@
 
                 if (distance < 0) {
                     clearInterval(timerInterval);
-                    document.getElementById('time').innerHTML = "EXPIRED";
+                    document.getElementById('time').innerHTML = "0d 0h 0m 0s";
                 }
             }, 1000);
         });

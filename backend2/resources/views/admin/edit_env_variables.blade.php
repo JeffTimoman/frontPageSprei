@@ -30,7 +30,7 @@
                     </div>
 
                     <div class="col-md-12 mt-2">
-                        <label for="BlockClaimTime" class="form-label">Block Claim In : </label>
+                        <label for="BlockClaimTime" class="form-label">Allow Claim In : </label>
                         <input type="datetime-global" class="form-control" name="BlockClaimTime" id="BlockClaimTime"
                             value="{{ $timeLimit->value }}">
 

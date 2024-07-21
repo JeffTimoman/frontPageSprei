@@ -78,8 +78,8 @@ Route::post('/claim', function (Request $request) {
         $block_claim_time_parsed = Carbon::createFromFormat('Y-m-d H:i:s', $block_claim_time->value, 'Asia/Jakarta');
 
         // Compare the parsed block claim time with the current time
-        if ($block_claim_time_parsed->lessThan($current_time)) {
-            return redirect(route('user.index'))->with('error', 'Claim failed due to time running out.');
+        if ($block_claim_time_parsed->greaterThan($current_time)) {
+            return redirect(route('user.index'))->with('error', 'Claim failed due to time restriction, wait until allowed time.');
         }
 
         // Proceed with your logic if the current time has not passed the BlockClaimTime

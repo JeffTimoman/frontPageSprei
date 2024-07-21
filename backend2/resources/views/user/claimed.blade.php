@@ -58,7 +58,7 @@
     </div>
     <div class="container pb-2">
         <div class="col-md-12 pb-5 d-flex align-items-center justify-content-center row mb-3" style="height: 75vh; overflow-y:scroll; position: relative;">
-            @if($transactions->count() == 0)
+            @if($transactions->count() != 0)
                 @foreach ($transactions as $item)
                     <div class="card mt-2 d-flex align-items-center" style="width: 100%;">
                         <div class="d-flex align-items-center justify-content-center">
